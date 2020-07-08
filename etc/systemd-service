@@ -1,0 +1,13 @@
+[Unit]
+Description=MQTT VUT FEKT projects
+
+[Service]
+User=seda
+ExecStart=/usr/bin/java -jar /opt/mqtt/jars/mqtt-data-mining-demo-1.0.0.jar
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=mqtt-vut-fekt
+Restart=yes
+
+[Install]
+WantedBy=multi-user.target

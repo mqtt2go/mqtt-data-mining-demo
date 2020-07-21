@@ -64,7 +64,13 @@ public class LightDemoService {
                                 mqttAnomalyMessageLight.setTimestamp(System.currentTimeMillis());
 
                                 mqttMessagePayloadToPublish.setPayload(objectMapper.writeValueAsString(mqttAnomalyMessageLight).getBytes());
-                                mqttPublisherService.sendMessage("homeid/gwid/events", mqttMessagePayloadToPublish);
+                                StringBuilder sb = new StringBuilder();
+                                sb.append(sensorIds[0]); //<home_id>
+                                sb.append("/");
+                                sb.append(sensorIds[1]); //<gateway_id>
+                                sb.append("/");
+                                sb.append("events");
+                                mqttPublisherService.sendMessage(sb.toString(), mqttMessagePayloadToPublish);
                             }
                         }
                     }

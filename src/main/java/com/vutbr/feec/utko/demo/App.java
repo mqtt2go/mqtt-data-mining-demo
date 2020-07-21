@@ -34,7 +34,9 @@ public class App {
             LightDemoRepository lightDemoRepository = new LightDemoRepository(jdbcTemplate);
             LightDemoService lightDemoService = new LightDemoService(mqttPublisherService, lightDemoRepository, objectMapper);
 
-            lightDemoService.subscribeMqttMessages();
+            if (args != null && args.length > 0 && !args[0].isBlank()) {
+                lightDemoService.subscribeMqttMessages(args[0]);
+            }
         } catch (SQLException e) {
             LOG.error(e.getMessage());
         }

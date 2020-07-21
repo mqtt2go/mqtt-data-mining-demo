@@ -21,7 +21,7 @@ public class HikariDataSourceJdbcTemplate {
     private static volatile HikariDataSource ds;
 
     static {
-        config.setJdbcUrl("jdbc:mysql://localhost:3306/mqtt2go-demo");
+        config.setJdbcUrl("jdbc:mysql://localhost:3306/mqtt2godemo");
         config.setUsername("root");
         config.setPassword("");
         ds = new HikariDataSource(config);

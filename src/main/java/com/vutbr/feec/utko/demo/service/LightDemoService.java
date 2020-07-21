@@ -3,10 +3,7 @@ package com.vutbr.feec.utko.demo.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vutbr.feec.utko.demo.config.IMqttClientInstance;
 import com.vutbr.feec.utko.demo.data.LightDemoRepository;
-import com.vutbr.feec.utko.demo.utils.AbstractSensorsFields;
-import com.vutbr.feec.utko.demo.utils.LightDto;
-import com.vutbr.feec.utko.demo.utils.MqttAnomalyMessageLight;
-import com.vutbr.feec.utko.demo.utils.SensorsState;
+import com.vutbr.feec.utko.demo.utils.*;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.slf4j.Logger;
@@ -31,7 +28,7 @@ public class LightDemoService {
         this.objectMapper = objectMapper;
     }
 
-    public void subscribeMqttMessages() {
+    public void subscribeMqttMessages(String deviceIdToCheck) {
         String topic = "#";
         try {
             IMqttClientInstance.getInstance().subscribe(topic, (actualTopicValue, mqttMessage) -> {
@@ -53,24 +50,29 @@ public class LightDemoService {
                         String lightDemoId = sensorIds[2];
                         String sensorState = sensorIds[3];
                         if (sensorState.equals(AbstractSensorsFields.STATE)) {
-                            LightDto lightDto = objectMapper.readValue(payload, LightDto.class);
-                            lightDemoRepository.storeSettings(lightDemoId, lightDto.getState(), LocalDateTime.now(Clock.systemUTC()));
+                            if (lightDemoId.equals(deviceIdToCheck)) {
+                                LightDto lightDto = objectMapper.readValue(payload, LightDto.class);
+                                lightDemoRepository.storeSettings(lightDemoId, lightDto.getValue(), LocalDateTime.now(Clock.systemUTC()));
 
-                            if (lightDto.getState().equals(SensorsState.ON)) {
-                                MqttMessage mqttMessagePayloadToPublish = new MqttMessage();
+                                if (lightDto.getValue().equals(SensorsState.ON)) {
+                                    MqttMessage mqttMessagePayloadToPublish = new MqttMessage();
 
-                                MqttAnomalyMessageLight mqttAnomalyMessageLight = new MqttAnomalyMessageLight();
-                                mqttAnomalyMessageLight.setMessage("It is not common that the light with id : " + lightDemoId + " is on in that time");
-                                mqttAnomalyMessageLight.setTimestamp(System.currentTimeMillis());
+                                    MqttAnomalyMessageLight mqttAnomalyMessageLight = new MqttAnomalyMessageLight();
+                                    MqttAnomalyMessageLightValue mqttAnomalyMessageLightValue = new MqttAnomalyMessageLightValue();
+                                    mqttAnomalyMessageLightValue.setEventName("ANOMALY");
+                                    mqttAnomalyMessageLightValue.setMessage("It is not common that the light with id : " + lightDemoId + " is on in that time");
+                                    mqttAnomalyMessageLight.setTimestamp(System.currentTimeMillis());
+                                    mqttAnomalyMessageLight.setValue(mqttAnomalyMessageLightValue);
 
-                                mqttMessagePayloadToPublish.setPayload(objectMapper.writeValueAsString(mqttAnomalyMessageLight).getBytes());
-                                StringBuilder sb = new StringBuilder();
-                                sb.append(sensorIds[0]); //<home_id>
-                                sb.append("/");
-                                sb.append(sensorIds[1]); //<gateway_id>
-                                sb.append("/");
-                                sb.append("events");
-                                mqttPublisherService.sendMessage(sb.toString(), mqttMessagePayloadToPublish);
+                                    mqttMessagePayloadToPublish.setPayload(objectMapper.writeValueAsString(mqttAnomalyMessageLight).getBytes());
+                                    StringBuilder sb = new StringBuilder();
+                                    sb.append(sensorIds[0]); //<home_id>
+                                    sb.append("/");
+                                    sb.append(sensorIds[1]); //<gateway_id>
+                                    sb.append("/");
+                                    sb.append("events");
+                                    mqttPublisherService.sendMessage(sb.toString(), mqttMessagePayloadToPublish);
+                                }
                             }
                         }
                     }

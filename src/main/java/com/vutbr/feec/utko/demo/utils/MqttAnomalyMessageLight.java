@@ -2,18 +2,27 @@ package com.vutbr.feec.utko.demo.utils;
 
 public class MqttAnomalyMessageLight {
 
-    private String message;
+    private int priorityLevel;
     private long timestamp;
+    private MqttAnomalyMessageLightValue value;
 
     public MqttAnomalyMessageLight() {
     }
 
-    public String getMessage() {
-        return message;
+    public int getPriorityLevel() {
+        return priorityLevel;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setPriorityLevel(int priorityLevel) {
+        this.priorityLevel = priorityLevel;
+    }
+
+    public MqttAnomalyMessageLightValue getValue() {
+        return value;
+    }
+
+    public void setValue(MqttAnomalyMessageLightValue value) {
+        this.value = value;
     }
 
     public long getTimestamp() {
@@ -22,5 +31,14 @@ public class MqttAnomalyMessageLight {
 
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
+    }
+
+    @Override
+    public String toString() {
+        return "MqttAnomalyMessageLight{" +
+                "priorityLevel=" + priorityLevel +
+                ", timestamp=" + timestamp +
+                ", value=" + value +
+                '}';
     }
 }

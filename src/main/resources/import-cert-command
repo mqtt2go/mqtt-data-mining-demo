@@ -1,0 +1,1 @@
+keytool -importcert -trustcacerts -file "C:/workspace/mqtt-data-mining-demo/src/main/resources/ca.crt" -alias mqtt2godemonewcert -keystore "C:/Program Files/Java/jdk-11/lib/security/cacerts"

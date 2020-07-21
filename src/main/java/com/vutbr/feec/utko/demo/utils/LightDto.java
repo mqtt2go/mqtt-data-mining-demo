@@ -3,19 +3,19 @@ package com.vutbr.feec.utko.demo.utils;
 import java.time.LocalDateTime;
 
 public class LightDto {
-    
+
     private Long id;
     private LocalDateTime timestampRecord;
-    private String state;
+    private String value;
     private String lightId;
 
     public LightDto() {
     }
 
-    public LightDto(Long id, LocalDateTime timestampRecord, String state, String lightId) {
+    public LightDto(Long id, LocalDateTime timestampRecord, String value, String lightId) {
         this.id = id;
         this.timestampRecord = timestampRecord;
-        this.state = state;
+        this.value = value;
         this.lightId = lightId;
     }
 
@@ -35,12 +35,12 @@ public class LightDto {
         this.timestampRecord = timestampRecord;
     }
 
-    public String getState() {
-        return state;
+    public String getValue() {
+        return value;
     }
 
-    public void setState(String state) {
-        this.state = state;
+    public void setValue(String value) {
+        this.value = value;
     }
 
     public String getLightId() {

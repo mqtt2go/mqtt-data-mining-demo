@@ -58,11 +58,13 @@ public class SocketService {
             socket.setConsumption(reportValueAndUnit.getValue());
             socket.setConsumptionUnit(reportValueAndUnit.getUnit());
             socketLastSettings.setConsumption(reportValueAndUnit.getValue());
+            socketLastSettings.setConsumptionUnit(reportValueAndUnit.getUnit());
         } else if (reportType.equals(AbstractSensorsFields.CURRENT)) {
             ReportValueAndUnitDecimal reportValueAndUnit = this.getReportValueAndUnit(mqttMessage).getReport();
             socket.setCurrent(reportValueAndUnit.getValue());
             socket.setCurrentUnit(reportValueAndUnit.getUnit());
             socketLastSettings.setCurrent(reportValueAndUnit.getValue());
+            socketLastSettings.setCurrentUnit(reportValueAndUnit.getUnit());
         } else if (reportType.equals(AbstractSensorsFields.VOLTAGE)) {
             ReportValueAndUnitDecimal reportValueAndUnit = this.getReportValueAndUnit(mqttMessage).getReport();
             socket.setVoltage(reportValueAndUnit.getValue());
@@ -74,6 +76,7 @@ public class SocketService {
             socket.setPower(reportValueAndUnit.getValue());
             socket.setPowerUnit(reportValueAndUnit.getUnit());
             socketLastSettings.setPower(reportValueAndUnit.getValue());
+            socketLastSettings.setPowerUnit(reportValueAndUnit.getUnit());
         }
     }
 

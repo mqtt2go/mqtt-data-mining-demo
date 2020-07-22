@@ -59,11 +59,15 @@ public class MultiSensorService {
         } else if (reportType.equals(AbstractSensorsFields.TEMPERATURE)) {
             ReportValueAndUnitDecimal reportValueAndUnit = this.getReportValueAndUnit(mqttMessage).getReport();
             multiSensor.setTemperature(reportValueAndUnit.getValue());
+            multiSensor.setTemperatureUnit(reportValueAndUnit.getUnit());
             multiSensorLastSettings.setTemperature(reportValueAndUnit.getValue());
+            multiSensorLastSettings.setTemperatureUnit(reportValueAndUnit.getUnit());
         } else if (reportType.equals(AbstractSensorsFields.HUMIDITY)) {
             ReportValueAndUnitDecimal reportValueAndUnit = this.getReportValueAndUnit(mqttMessage).getReport();
             multiSensor.setHumidity(reportValueAndUnit.getValue());
+            multiSensor.setHumidityUnit(reportValueAndUnit.getUnit());
             multiSensorLastSettings.setHumidity(reportValueAndUnit.getValue());
+            multiSensorLastSettings.setHumidityUnit(reportValueAndUnit.getUnit());
         } else if (reportType.equals(AbstractSensorsFields.MOTION)) {
             String reportValueAndUnit = this.getReport(mqttMessage).getReport();
             multiSensor.setMotion(reportValueAndUnit);

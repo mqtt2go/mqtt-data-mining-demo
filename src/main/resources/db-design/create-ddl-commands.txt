@@ -1,0 +1,154 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema mqtt2godemo
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema mqtt2godemo
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `mqtt2godemo` DEFAULT CHARACTER SET utf8 ;
+USE `mqtt2godemo` ;
+
+-- -----------------------------------------------------
+-- Table `mqtt2godemo`.`socket`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mqtt2godemo`.`socket` (
+  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `record_timestamp` TIMESTAMP NULL,
+  `user_in_home` TINYINT NULL,
+  `state` VARCHAR(45) NULL,
+  `consumption` DECIMAL(30,2) NULL,
+  `ccurrent` DECIMAL(30,2) NULL,
+  `voltage` DECIMAL(30,2) NULL,
+  `power` DECIMAL(30,2) NULL,
+  `group_id` VARCHAR(255) NULL,
+  `device_id` VARCHAR(255) NOT NULL,
+  `home_id` VARCHAR(255) NOT NULL,
+  `gateway_id` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mqtt2godemo`.`socket_last_settings`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mqtt2godemo`.`socket_last_settings` (
+  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `record_timestamp` TIMESTAMP NULL,
+  `user_in_home` TINYINT NULL,
+  `state` VARCHAR(45) NULL,
+  `consumption` DECIMAL(30,2) NULL,
+  `ccurrent` DECIMAL(30,2) NULL,
+  `voltage` DECIMAL(30,2) NULL,
+  `power` DECIMAL(30,2) NULL,
+  `group_id` VARCHAR(255) NULL,
+  `device_id` VARCHAR(255) NOT NULL,
+  `home_id` VARCHAR(255) NOT NULL,
+  `gateway_id` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mqtt2godemo`.`camera`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mqtt2godemo`.`camera` (
+  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `record_timestamp` TIMESTAMP NOT NULL,
+  `user_in_home` TINYINT NULL,
+  `state` VARCHAR(45) NULL,
+  `group_id` VARCHAR(45) NULL,
+  `device_id` VARCHAR(45) NOT NULL,
+  `home_id` VARCHAR(45) NOT NULL,
+  `gateway_id` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mqtt2godemo`.`light`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mqtt2godemo`.`light` (
+  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `record_timestamp` TIMESTAMP NOT NULL,
+  `user_in_home` TINYINT NULL,
+  `state` VARCHAR(45) NULL,
+  `group_id` VARCHAR(45) NULL,
+  `device_id` VARCHAR(45) NOT NULL,
+  `home_id` VARCHAR(45) NOT NULL,
+  `gateway_id` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mqtt2godemo`.`light_last_settings`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mqtt2godemo`.`light_last_settings` (
+  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `record_timestamp` TIMESTAMP NOT NULL,
+  `user_in_home` TINYINT NULL,
+  `state` VARCHAR(45) NULL,
+  `group_id` VARCHAR(45) NULL,
+  `device_id` VARCHAR(45) NOT NULL,
+  `home_id` VARCHAR(45) NOT NULL,
+  `gateway_id` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mqtt2godemo`.`multi_sensor`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mqtt2godemo`.`multi_sensor` (
+  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `record_timestamp` TIMESTAMP NOT NULL,
+  `user_in_home` TINYINT NULL,
+  `state` VARCHAR(45) NULL,
+  `temperature` DECIMAL(30,2) NULL,
+  `humidity` DECIMAL(30,2) NULL,
+  `motion` VARCHAR(45) NULL,
+  `smoke` VARCHAR(45) NULL,
+  `water` VARCHAR(45) NULL,
+  `group_id` VARCHAR(45) NULL,
+  `device_id` VARCHAR(45) NOT NULL,
+  `home_id` VARCHAR(45) NOT NULL,
+  `gateway_id` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mqtt2godemo`.`multi_sensor_last_settings`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mqtt2godemo`.`multi_sensor_last_settings` (
+  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `record_timestamp` TIMESTAMP NOT NULL,
+  `user_in_home` TINYINT NULL,
+  `state` VARCHAR(45) NULL,
+  `temperature` DECIMAL(30,2) NULL,
+  `humidity` DECIMAL(30,2) NULL,
+  `motion` VARCHAR(45) NULL,
+  `smoke` VARCHAR(45) NULL,
+  `water` VARCHAR(45) NULL,
+  `group_id` VARCHAR(45) NULL,
+  `device_id` VARCHAR(45) NOT NULL,
+  `home_id` VARCHAR(45) NOT NULL,
+  `gateway_id` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
+ENGINE = InnoDB;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

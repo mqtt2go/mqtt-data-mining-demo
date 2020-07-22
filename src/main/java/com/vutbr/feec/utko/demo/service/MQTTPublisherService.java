@@ -11,10 +11,10 @@ public class MQTTPublisherService {
 
     private static Logger LOG = LoggerFactory.getLogger(MQTTPublisherService.class);
 
-    public void sendMessage(String mqttBrokerTopic, MqttMessage mqttMessage) {
+    public void sendMessage(String mqttTopic, MqttMessage mqttMessage) {
         try {
             IMqttClient iMqttClient = IMqttClientInstance.getInstance();
-            iMqttClient.publish(mqttBrokerTopic, mqttMessage);
+            iMqttClient.publish(mqttTopic, mqttMessage);
             LOG.info("MqttClient client published a message..:" + System.lineSeparator() + new String(mqttMessage.getPayload()));
         } catch (MqttException e) {
             LOG.error(e.getMessage());

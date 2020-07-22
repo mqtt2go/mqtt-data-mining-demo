@@ -1,14 +1,14 @@
 package com.vutbr.feec.utko.demo;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.vutbr.feec.utko.demo.data.LightDemoRepository;
+import com.vutbr.feec.utko.demo.config.ObjectMapperConfig;
+import com.vutbr.feec.utko.demo.repository.CameraRepository;
+import com.vutbr.feec.utko.demo.repository.MultiSensorRepository;
+import com.vutbr.feec.utko.demo.repository.SocketRepository;
+import com.vutbr.feec.utko.demo.repository.LightRepository;
 import com.vutbr.feec.utko.demo.dbconnection.HikariDataSourceJdbcTemplate;
-import com.vutbr.feec.utko.demo.service.LightDemoService;
-import com.vutbr.feec.utko.demo.service.MQTTPublisherService;
+import com.vutbr.feec.utko.demo.service.*;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -21,21 +21,27 @@ public class App {
 
     public static void main(String[] args) {
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
-            objectMapper.registerModule(new JavaTimeModule());
-            objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-            objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-            objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            ObjectMapperConfig objectMapperConfig = new ObjectMapperConfig();
+            ObjectMapper objectMapper = objectMapperConfig.getObjectMapper();
+
+            ModelMapper modelMapper = new ModelMapper();
 
             JdbcTemplate jdbcTemplate = new JdbcTemplate(HikariDataSourceJdbcTemplate.getDataSource());
 
-            MQTTPublisherService mqttPublisherService = new MQTTPublisherService();
-            LightDemoRepository lightDemoRepository = new LightDemoRepository(jdbcTemplate);
-            LightDemoService lightDemoService = new LightDemoService(mqttPublisherService, lightDemoRepository, objectMapper);
+            SocketRepository socketRepository = new SocketRepository(jdbcTemplate);
+            LightRepository lightRepository = new LightRepository(jdbcTemplate);
+            CameraRepository cameraRepository = new CameraRepository(jdbcTemplate);
+            MultiSensorRepository multiSensorRepository = new MultiSensorRepository(jdbcTemplate);
 
+            SocketService socketService = new SocketService(socketRepository, objectMapper, modelMapper);
+            LightService lightService = new LightService(lightRepository, objectMapper, modelMapper);
+            CameraService cameraService = new CameraService(cameraRepository, objectMapper, modelMapper);
+            MultiSensorService multiSensorService = new MultiSensorService(multiSensorRepository, objectMapper, modelMapper);
+
+            MQTTPublisherService mqttPublisherService = new MQTTPublisherService();
+            MQTTSubscriberService mqttSubscriberService = new MQTTSubscriberService(mqttPublisherService, lightService, socketService, cameraService, objectMapper);
             if (args != null && args.length > 0 && !args[0].isBlank()) {
-                lightDemoService.subscribeMqttMessages(args[0]);
+                mqttSubscriberService.subscribeMqttMessages(args[0]);
             }
         } catch (SQLException e) {
             LOG.error(e.getMessage());

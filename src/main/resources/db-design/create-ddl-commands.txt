@@ -23,29 +23,13 @@ CREATE TABLE IF NOT EXISTS `mqtt2godemo`.`socket` (
   `user_in_home` TINYINT NULL,
   `state` VARCHAR(45) NULL,
   `consumption` DECIMAL(30,2) NULL,
+  `consumption_unit` VARCHAR(45) NULL,
   `ccurrent` DECIMAL(30,2) NULL,
+  `ccurrent_unit` VARCHAR(45) NULL,
   `voltage` DECIMAL(30,2) NULL,
+  `voltage_unit` VARCHAR(45) NULL,
   `power` DECIMAL(30,2) NULL,
-  `group_id` VARCHAR(255) NULL,
-  `device_id` VARCHAR(255) NOT NULL,
-  `home_id` VARCHAR(255) NOT NULL,
-  `gateway_id` VARCHAR(255) NOT NULL,
-  PRIMARY KEY (`id`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `mqtt2godemo`.`socket_last_settings`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mqtt2godemo`.`socket_last_settings` (
-  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `record_timestamp` TIMESTAMP NULL,
-  `user_in_home` TINYINT NULL,
-  `state` VARCHAR(45) NULL,
-  `consumption` DECIMAL(30,2) NULL,
-  `ccurrent` DECIMAL(30,2) NULL,
-  `voltage` DECIMAL(30,2) NULL,
-  `power` DECIMAL(30,2) NULL,
+  `power_unit` VARCHAR(45) NULL,
   `group_id` VARCHAR(255) NULL,
   `device_id` VARCHAR(255) NOT NULL,
   `home_id` VARCHAR(255) NOT NULL,
@@ -111,7 +95,9 @@ CREATE TABLE IF NOT EXISTS `mqtt2godemo`.`multi_sensor` (
   `user_in_home` TINYINT NULL,
   `state` VARCHAR(45) NULL,
   `temperature` DECIMAL(30,2) NULL,
+  `temperature_unit` VARCHAR(45) NULL,
   `humidity` DECIMAL(30,2) NULL,
+  `humidity_unit` VARCHAR(45) NULL,
   `motion` VARCHAR(45) NULL,
   `smoke` VARCHAR(45) NULL,
   `water` VARCHAR(45) NULL,
@@ -119,6 +105,30 @@ CREATE TABLE IF NOT EXISTS `mqtt2godemo`.`multi_sensor` (
   `device_id` VARCHAR(45) NOT NULL,
   `home_id` VARCHAR(45) NOT NULL,
   `gateway_id` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mqtt2godemo`.`socket_last_settings`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mqtt2godemo`.`socket_last_settings` (
+  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `record_timestamp` TIMESTAMP NULL,
+  `user_in_home` TINYINT NULL,
+  `state` VARCHAR(45) NULL,
+  `consumption` DECIMAL(30,2) NULL,
+  `consumption_unit` VARCHAR(45) NULL,
+  `ccurrent` DECIMAL(30,2) NULL,
+  `ccurrent_unit` VARCHAR(45) NULL,
+  `voltage` DECIMAL(30,2) NULL,
+  `voltage_unit` VARCHAR(45) NULL,
+  `power` DECIMAL(30,2) NULL,
+  `power_unit` VARCHAR(45) NULL,
+  `group_id` VARCHAR(255) NULL,
+  `device_id` VARCHAR(255) NOT NULL,
+  `home_id` VARCHAR(255) NOT NULL,
+  `gateway_id` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
@@ -132,7 +142,9 @@ CREATE TABLE IF NOT EXISTS `mqtt2godemo`.`multi_sensor_last_settings` (
   `user_in_home` TINYINT NULL,
   `state` VARCHAR(45) NULL,
   `temperature` DECIMAL(30,2) NULL,
+  `temperature_unit` VARCHAR(45) NULL,
   `humidity` DECIMAL(30,2) NULL,
+  `humidity_unit` VARCHAR(45) NULL,
   `motion` VARCHAR(45) NULL,
   `smoke` VARCHAR(45) NULL,
   `water` VARCHAR(45) NULL,

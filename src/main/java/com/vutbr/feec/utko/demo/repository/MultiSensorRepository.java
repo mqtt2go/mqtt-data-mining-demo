@@ -17,7 +17,7 @@ public class MultiSensorRepository {
 
     public void saveMultiSensor(MultiSensorEntity multiSensorEntity) {
         jdbcTemplate.update(
-                "INSERT INTO multi_sensor (user_in_home, state, temperature, temperature_unit, humidity, humidity_unit motion, smoke, water, record_timestamp, group_id, device_id, home_id, gateway_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                "INSERT INTO multi_sensor (user_in_home, state, temperature, temperature_unit, humidity, humidity_unit, motion, smoke, water, record_timestamp, group_id, device_id, home_id, gateway_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 multiSensorEntity.isUserInHome(),
                 multiSensorEntity.getState(),
                 multiSensorEntity.getTemperature(),

@@ -1,6 +1,5 @@
 package com.vutbr.feec.utko.demo.repository;
 
-import com.vutbr.feec.utko.demo.entities.MultiSensorLastSettingsEntity;
 import com.vutbr.feec.utko.demo.entities.SocketEntity;
 import com.vutbr.feec.utko.demo.entities.SocketLastSettingsEntity;
 import org.springframework.jdbc.core.JdbcTemplate;

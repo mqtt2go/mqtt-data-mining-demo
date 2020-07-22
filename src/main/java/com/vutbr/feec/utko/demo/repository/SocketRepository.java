@@ -17,13 +17,17 @@ public class SocketRepository {
 
     public void saveSocket(SocketEntity socketEntity) {
         jdbcTemplate.update(
-                "INSERT INTO socket (user_in_home, state, consumption, ccurrent, voltage, power, record_timestamp, group_id, device_id, home_id, gateway_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                "INSERT INTO socket (user_in_home, state, consumption, consumption_unit, ccurrent, ccurrent_unit, voltage, voltage_unit, power, power_unit, record_timestamp, group_id, device_id, home_id, gateway_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 socketEntity.isUserInHome(),
                 socketEntity.getState(),
                 socketEntity.getConsumption(),
+                socketEntity.getConsumptionUnit(),
                 socketEntity.getCurrent(),
+                socketEntity.getCurrentUnit(),
                 socketEntity.getVoltage(),
+                socketEntity.getVoltageUnit(),
                 socketEntity.getPower(),
+                socketEntity.getPowerUnit(),
                 socketEntity.getRecordTimestamp(),
                 socketEntity.getGroupId(),
                 socketEntity.getDeviceId(),
@@ -33,13 +37,17 @@ public class SocketRepository {
 
     public void saveSocketLastSettings(SocketLastSettingsEntity socketLastSettingsEntity) {
         jdbcTemplate.update(
-                "INSERT INTO socket_last_settings (user_in_home, state, consumption, ccurrent, voltage, power, record_timestamp, group_id, device_id, home_id, gateway_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                "INSERT INTO socket_last_settings (user_in_home, state, consumption, consumption_unit, ccurrent, ccurrent_unit, voltage, voltage_unit, power, power_unit, record_timestamp, group_id, device_id, home_id, gateway_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 socketLastSettingsEntity.isUserInHome(),
                 socketLastSettingsEntity.getState(),
                 socketLastSettingsEntity.getConsumption(),
+                socketLastSettingsEntity.getConsumptionUnit(),
                 socketLastSettingsEntity.getCurrent(),
+                socketLastSettingsEntity.getCurrentUnit(),
                 socketLastSettingsEntity.getVoltage(),
+                socketLastSettingsEntity.getVoltageUnit(),
                 socketLastSettingsEntity.getPower(),
+                socketLastSettingsEntity.getPowerUnit(),
                 socketLastSettingsEntity.getRecordTimestamp(),
                 socketLastSettingsEntity.getGroupId(),
                 socketLastSettingsEntity.getDeviceId(),
@@ -47,24 +55,24 @@ public class SocketRepository {
                 socketLastSettingsEntity.getGatewayId());
     }
 
-    public void updateMultiSensorLastSettings(MultiSensorLastSettingsEntity multiSensorEntity) {
+    public void updateSocketLastSettings(SocketLastSettingsEntity socketLastSettingsEntity) {
         jdbcTemplate.update(
-                "UPDATE multi_sensor_last_settings SET user_in_home = ?, state = ?, consumption = ?, ccurrent = ?, voltage = ?, power = ?, record_timestamp = ?, group_id = ?, device_id = ?, home_id = ?, gateway_id = ? WHERE device_id = ? AND home_id = ? AND gateway_id = ?",
-                multiSensorEntity.isUserInHome(),
-                multiSensorEntity.getState(),
-                multiSensorEntity.getTemperature(),
-                multiSensorEntity.getHumidity(),
-                multiSensorEntity.getMotion(),
-                multiSensorEntity.getSmoke(),
-                multiSensorEntity.getWater(),
-                multiSensorEntity.getRecordTimestamp(),
-                multiSensorEntity.getGroupId(),
-                multiSensorEntity.getDeviceId(),
-                multiSensorEntity.getHomeId(),
-                multiSensorEntity.getGatewayId(),
-                multiSensorEntity.getDeviceId(),
-                multiSensorEntity.getHomeId(),
-                multiSensorEntity.getGatewayId());
+                "UPDATE socket_last_settings SET user_in_home = ?, state = ?, consumption = ?, consumption_unit = ?, ccurrent = ?, ccurrent_unit = ?, voltage = ?, voltage_unit = ?, power = ?, power_unit = ?, record_timestamp = ?, group_id = ?, device_id = ?, home_id = ?, gateway_id = ? WHERE device_id = ? AND home_id = ? AND gateway_id = ?",
+                socketLastSettingsEntity.isUserInHome(),
+                socketLastSettingsEntity.getState(),
+                socketLastSettingsEntity.getConsumption(),
+                socketLastSettingsEntity.getConsumptionUnit(),
+                socketLastSettingsEntity.getCurrent(),
+                socketLastSettingsEntity.getCurrentUnit(),
+                socketLastSettingsEntity.getVoltage(),
+                socketLastSettingsEntity.getVoltageUnit(),
+                socketLastSettingsEntity.getPower(),
+                socketLastSettingsEntity.getPowerUnit(),
+                socketLastSettingsEntity.getRecordTimestamp(),
+                socketLastSettingsEntity.getGroupId(),
+                socketLastSettingsEntity.getDeviceId(),
+                socketLastSettingsEntity.getHomeId(),
+                socketLastSettingsEntity.getGatewayId());
     }
 
 
@@ -80,9 +88,13 @@ public class SocketRepository {
                                         rs.getBoolean("user_in_home"),
                                         rs.getString("state"),
                                         rs.getBigDecimal("consumption"),
+                                        rs.getString("consumption_unit"),
                                         rs.getBigDecimal("ccurrent"),
+                                        rs.getString("ccurrent_unit"),
                                         rs.getBigDecimal("voltage"),
+                                        rs.getString("voltage_unit"),
                                         rs.getBigDecimal("power"),
+                                        rs.getString("power_unit"),
                                         rs.getTimestamp("record_timestamp"),
                                         rs.getString("group_id"),
                                         rs.getString("device_id"),

@@ -45,7 +45,6 @@ public class MQTTSubscriberService {
     public void subscribeMqttMessages(String deviceIdToCheck) {
         String topic = "#";
         try {
-            publishRequestForGetAllDevicesTypes(); // refresh device type id mapping
             IMqttClientInstance.getInstance().subscribe(topic, (actualTopicValue, mqttMessage) -> {
                 try {
                     LOG.info("Received MQTT message");
@@ -57,35 +56,28 @@ public class MQTTSubscriberService {
                     // <home_id>/<gateway_id>/<dev_id>/<entity>/<msg_direction>
                     String[] sensorIds = actualTopicValue.split("/");
 
-                    // parse reportType
-//                    if (sensorIds[3] != null && sensorIds[3].equals("NONE")) {
-//                        return;
-//                    } else if (sensorIds[3] != null && sensorIds[3].equals("query_all")) {
-//                        // parse Kryštofs JSON Object
-//                        refreshMapForDeviceIDTypeMapping(mqttMessage);
-//                        return;
-//                    }
-
+                    if (payload.contains("query_all") && payload.contains("report_name")) {
+                        refreshMapForDeviceIDTypeMapping(mqttMessage);
+                        return;
+                    }
 //                    // if the communication is going in than it is not essential
 //                    if (sensorIds[4] != null && sensorIds[4].equals("in")) {
 //                        return;
 //                    }
+                    
+                    String deviceType = DEVICE_ID_TYPE_MAPPING_MAP.get(sensorIds[2]);
+                    if (deviceType == null || deviceType.equals("")) {
+                        return;
+                    }
 
-                    //check type
-//                    String deviceType = DEVICE_ID_TYPE_MAPPING_MAP.get(String.valueOf(sensorIds[2]));
-//                    if (deviceType == null || deviceType.equals("")) {
-//                        return;
-//                    }
-//
-//                    if (deviceType.equals("socket")) {
-//                        socketService.storeSocketData(sensorIds, mqttMessage);
-//                    } else if (deviceType.equals("light")) {
-//                        lightService.storeLightData(sensorIds, mqttMessage);
-//                    } else if (deviceType.equals("multi_sensor")) {
-//                        multiSensorService.storeMultiSensorData(sensorIds, mqttMessage);
-//                    } else if (deviceType.equals("door")) {
-//                        doorWindowService.storeDoorWindowData(sensorIds, mqttMessage);
-//                    }
+                    if (deviceType.equals("socket")) {
+                        socketService.storeSocketData(sensorIds, mqttMessage);
+                    } else if (deviceType.equals("light")) {
+                        lightService.storeLightData(sensorIds, mqttMessage);
+                    } else if (deviceType.equals("multi_sensor")) {
+                        System.out.println("Store multisensor data..");
+                        multiSensorService.storeMultiSensorData(sensorIds, mqttMessage);
+                    }
 
                     if (sensorIds != null && sensorIds.length > 3 && sensorIds[3].equals("motion_detected")) {
                         cameraService.storeCameraData(sensorIds, mqttMessage);
@@ -121,7 +113,7 @@ public class MQTTSubscriberService {
                     LOG.error("MQTTSubscriberService subscribeMessage()", e);
                 }
             });
-        } catch (MqttException | JsonProcessingException e) {
+        } catch (MqttException e) {
             LOG.error("Mqtt Subscribtion is not possible", e);
         }
     }

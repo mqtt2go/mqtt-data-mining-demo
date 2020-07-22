@@ -49,10 +49,6 @@ public class CameraService {
         cameraEntity.setDeviceId(sensorsIds[2]);
     }
 
-    private SensorsReportValueAndUnit getReportValueAndUnit(MqttMessage mqttMessage) throws JsonProcessingException {
-        return objectMapper.readValue(new String(mqttMessage.getPayload()), SensorsReportValueAndUnit.class);
-    }
-
     private SensorsReport getReport(MqttMessage mqttMessage) throws JsonProcessingException {
         return objectMapper.readValue(new String(mqttMessage.getPayload()), SensorsReport.class);
     }

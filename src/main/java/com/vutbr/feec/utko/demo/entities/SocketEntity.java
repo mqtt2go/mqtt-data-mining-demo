@@ -10,9 +10,13 @@ public class SocketEntity implements Serializable {
     private boolean userInHome;
     private String state;
     private BigDecimal consumption;
+    private String consumptionUnit;
     private BigDecimal current;
+    private String currentUnit;
     private BigDecimal voltage;
+    private String voltageUnit;
     private BigDecimal power;
+    private String powerUnit;
     private Timestamp recordTimestamp;
     private String groupId;
     private String deviceId;
@@ -22,14 +26,18 @@ public class SocketEntity implements Serializable {
     public SocketEntity() {
     }
 
-    public SocketEntity(Long id, boolean userInHome, String state, BigDecimal consumption, BigDecimal current, BigDecimal voltage, BigDecimal power, Timestamp recordTimestamp, String groupId, String deviceId, String homeId, String gatewayId) {
+    public SocketEntity(Long id, boolean userInHome, String state, BigDecimal consumption, String consumptionUnit, BigDecimal current, String currentUnit, BigDecimal voltage, String voltageUnit, BigDecimal power, String powerUnit, Timestamp recordTimestamp, String groupId, String deviceId, String homeId, String gatewayId) {
         this.id = id;
         this.userInHome = userInHome;
         this.state = state;
         this.consumption = consumption;
+        this.consumptionUnit = consumptionUnit;
         this.current = current;
+        this.currentUnit = currentUnit;
         this.voltage = voltage;
+        this.voltageUnit = voltageUnit;
         this.power = power;
+        this.powerUnit = powerUnit;
         this.recordTimestamp = recordTimestamp;
         this.groupId = groupId;
         this.deviceId = deviceId;
@@ -131,5 +139,37 @@ public class SocketEntity implements Serializable {
 
     public void setGatewayId(String gatewayId) {
         this.gatewayId = gatewayId;
+    }
+
+    public String getConsumptionUnit() {
+        return consumptionUnit;
+    }
+
+    public void setConsumptionUnit(String consumptionUnit) {
+        this.consumptionUnit = consumptionUnit;
+    }
+
+    public String getCurrentUnit() {
+        return currentUnit;
+    }
+
+    public void setCurrentUnit(String currentUnit) {
+        this.currentUnit = currentUnit;
+    }
+
+    public String getVoltageUnit() {
+        return voltageUnit;
+    }
+
+    public void setVoltageUnit(String voltageUnit) {
+        this.voltageUnit = voltageUnit;
+    }
+
+    public String getPowerUnit() {
+        return powerUnit;
+    }
+
+    public void setPowerUnit(String powerUnit) {
+        this.powerUnit = powerUnit;
     }
 }

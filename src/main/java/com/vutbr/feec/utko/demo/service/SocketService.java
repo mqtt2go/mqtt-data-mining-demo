@@ -5,14 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vutbr.feec.utko.demo.entities.SocketEntity;
 import com.vutbr.feec.utko.demo.entities.SocketLastSettingsEntity;
 import com.vutbr.feec.utko.demo.repository.SocketRepository;
-import com.vutbr.feec.utko.demo.utils.AbstractSensorsFields;
-import com.vutbr.feec.utko.demo.utils.ReportValueAndUnit;
-import com.vutbr.feec.utko.demo.utils.SensorsReport;
-import com.vutbr.feec.utko.demo.utils.SensorsReportValueAndUnit;
+import com.vutbr.feec.utko.demo.utils.*;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.modelmapper.ModelMapper;
 
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Optional;
 
@@ -33,15 +29,15 @@ public class SocketService {
     public void storeSocketData(String[] sensorIds, MqttMessage mqttMessage) throws JsonProcessingException {
         SocketEntity socket = new SocketEntity();
         String reportType = sensorIds[3];
-        Optional<SocketLastSettingsEntity> socketLastSettingsOpt = socketRepository.findSocketSettingsByHomeIdGatewayIdDeviceId(sensorIds[0], sensorIds[1], sensorIds[2]);
-        if (socketLastSettingsOpt.isPresent()) {
+        try {
+            Optional<SocketLastSettingsEntity> socketLastSettingsOpt = socketRepository.findSocketSettingsByHomeIdGatewayIdDeviceId(sensorIds[0], sensorIds[1], sensorIds[2]);
             SocketLastSettingsEntity socketLastSettings = socketLastSettingsOpt.get();
             modelMapper.map(socketLastSettings, socket);
             setSocketValue(reportType, mqttMessage, socket, socketLastSettings);
             // update last settings record
             addBasicSocketLastSettingsFields(socketLastSettings, sensorIds);
-            socketRepository.saveSocketLastSettings(socketLastSettings);
-        } else {
+            socketRepository.updateSocketLastSettings(socketLastSettings);
+        } catch (org.springframework.dao.EmptyResultDataAccessException ex) {
             SocketLastSettingsEntity socketLastSettings = new SocketLastSettingsEntity();
             setSocketValue(reportType, mqttMessage, socket, socketLastSettings);
             // create new record
@@ -58,21 +54,26 @@ public class SocketService {
             socket.setState(reportValueAndUnit);
             socketLastSettings.setState(reportValueAndUnit);
         } else if (reportType.equals(AbstractSensorsFields.CONSUMPTION)) {
-            ReportValueAndUnit reportValueAndUnit = this.getReportValueAndUnit(mqttMessage).getReport();
-            socket.setConsumption(BigDecimal.valueOf(Long.parseLong(reportValueAndUnit.getValue())));
-            socketLastSettings.setConsumption(BigDecimal.valueOf(Long.parseLong(reportValueAndUnit.getValue())));
+            ReportValueAndUnitDecimal reportValueAndUnit = this.getReportValueAndUnit(mqttMessage).getReport();
+            socket.setConsumption(reportValueAndUnit.getValue());
+            socket.setConsumptionUnit(reportValueAndUnit.getUnit());
+            socketLastSettings.setConsumption(reportValueAndUnit.getValue());
         } else if (reportType.equals(AbstractSensorsFields.CURRENT)) {
-            ReportValueAndUnit reportValueAndUnit = this.getReportValueAndUnit(mqttMessage).getReport();
-            socket.setCurrent(BigDecimal.valueOf(Long.parseLong(reportValueAndUnit.getValue())));
-            socketLastSettings.setCurrent(BigDecimal.valueOf(Long.parseLong(reportValueAndUnit.getValue())));
+            ReportValueAndUnitDecimal reportValueAndUnit = this.getReportValueAndUnit(mqttMessage).getReport();
+            socket.setCurrent(reportValueAndUnit.getValue());
+            socket.setCurrentUnit(reportValueAndUnit.getUnit());
+            socketLastSettings.setCurrent(reportValueAndUnit.getValue());
         } else if (reportType.equals(AbstractSensorsFields.VOLTAGE)) {
-            ReportValueAndUnit reportValueAndUnit = this.getReportValueAndUnit(mqttMessage).getReport();
-            socket.setVoltage(BigDecimal.valueOf(Long.parseLong(reportValueAndUnit.getValue())));
-            socketLastSettings.setVoltage(BigDecimal.valueOf(Long.parseLong(reportValueAndUnit.getValue())));
+            ReportValueAndUnitDecimal reportValueAndUnit = this.getReportValueAndUnit(mqttMessage).getReport();
+            socket.setVoltage(reportValueAndUnit.getValue());
+            socket.setVoltageUnit(reportValueAndUnit.getUnit());
+            socketLastSettings.setVoltage(reportValueAndUnit.getValue());
+            socketLastSettings.setVoltageUnit(reportValueAndUnit.getUnit());
         } else if (reportType.equals(AbstractSensorsFields.POWER)) {
-            ReportValueAndUnit reportValueAndUnit = this.getReportValueAndUnit(mqttMessage).getReport();
-            socket.setPower(BigDecimal.valueOf(Long.parseLong(reportValueAndUnit.getValue())));
-            socketLastSettings.setPower(BigDecimal.valueOf(Long.parseLong(reportValueAndUnit.getValue())));
+            ReportValueAndUnitDecimal reportValueAndUnit = this.getReportValueAndUnit(mqttMessage).getReport();
+            socket.setPower(reportValueAndUnit.getValue());
+            socket.setPowerUnit(reportValueAndUnit.getUnit());
+            socketLastSettings.setPower(reportValueAndUnit.getValue());
         }
     }
 
@@ -90,8 +91,8 @@ public class SocketService {
         socketLastSettings.setDeviceId(sensorIds[2]);
     }
 
-    private SensorsReportValueAndUnit getReportValueAndUnit(MqttMessage mqttMessage) throws JsonProcessingException {
-        return objectMapper.readValue(new String(mqttMessage.getPayload()), SensorsReportValueAndUnit.class);
+    private SensorsReportValueAndUnitBigDecimal getReportValueAndUnit(MqttMessage mqttMessage) throws JsonProcessingException {
+        return objectMapper.readValue(new String(mqttMessage.getPayload()), SensorsReportValueAndUnitBigDecimal.class);
     }
 
     private SensorsReport getReport(MqttMessage mqttMessage) throws JsonProcessingException {

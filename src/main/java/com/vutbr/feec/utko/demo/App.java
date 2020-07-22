@@ -1,5 +1,6 @@
 package com.vutbr.feec.utko.demo;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vutbr.feec.utko.demo.config.ObjectMapperConfig;
 import com.vutbr.feec.utko.demo.repository.CameraRepository;
@@ -39,11 +40,14 @@ public class App {
             MultiSensorService multiSensorService = new MultiSensorService(multiSensorRepository, objectMapper, modelMapper);
 
             MQTTPublisherService mqttPublisherService = new MQTTPublisherService();
-            MQTTSubscriberService mqttSubscriberService = new MQTTSubscriberService(mqttPublisherService, lightService, socketService, cameraService, objectMapper);
+            MQTTSubscriberService mqttSubscriberService = new MQTTSubscriberService(mqttPublisherService, lightService, socketService, cameraService, multiSensorService, objectMapper);
             if (args != null && args.length > 0 && !args[0].isBlank()) {
                 mqttSubscriberService.subscribeMqttMessages(args[0]);
             }
+            mqttSubscriberService.publishRequestForGetAllDevicesTypes();
         } catch (SQLException e) {
+            LOG.error(e.getMessage());
+        } catch (JsonProcessingException e) {
             LOG.error(e.getMessage());
         }
     }

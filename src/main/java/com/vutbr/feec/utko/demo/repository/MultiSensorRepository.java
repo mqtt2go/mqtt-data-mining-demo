@@ -17,11 +17,13 @@ public class MultiSensorRepository {
 
     public void saveMultiSensor(MultiSensorEntity multiSensorEntity) {
         jdbcTemplate.update(
-                "INSERT INTO multi_sensor (user_in_home, state, temperature, humidity, motion, smoke, water, record_timestamp, group_id, device_id, home_id, gateway_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                "INSERT INTO multi_sensor (user_in_home, state, temperature, temperature_unit, humidity, humidity_unit motion, smoke, water, record_timestamp, group_id, device_id, home_id, gateway_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 multiSensorEntity.isUserInHome(),
                 multiSensorEntity.getState(),
                 multiSensorEntity.getTemperature(),
+                multiSensorEntity.getTemperatureUnit(),
                 multiSensorEntity.getHumidity(),
+                multiSensorEntity.getHumidityUnit(),
                 multiSensorEntity.getMotion(),
                 multiSensorEntity.getSmoke(),
                 multiSensorEntity.getWater(),
@@ -34,11 +36,13 @@ public class MultiSensorRepository {
 
     public void saveMultiSensorLastSettings(MultiSensorLastSettingsEntity multiSensorEntity) {
         jdbcTemplate.update(
-                "INSERT INTO multi_sensor_last_settings (user_in_home, state, temperature, humidity, motion, smoke, water, record_timestamp, group_id, device_id, home_id, gateway_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                "INSERT INTO multi_sensor_last_settings (user_in_home, state, temperature, temperature_unit, humidity, humidity_unit, motion, smoke, water, record_timestamp, group_id, device_id, home_id, gateway_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 multiSensorEntity.isUserInHome(),
                 multiSensorEntity.getState(),
                 multiSensorEntity.getTemperature(),
+                multiSensorEntity.getTemperatureUnit(),
                 multiSensorEntity.getHumidity(),
+                multiSensorEntity.getHumidityUnit(),
                 multiSensorEntity.getMotion(),
                 multiSensorEntity.getSmoke(),
                 multiSensorEntity.getWater(),
@@ -51,11 +55,13 @@ public class MultiSensorRepository {
 
     public void updateMultiSensorLastSettings(MultiSensorLastSettingsEntity multiSensorEntity) {
         jdbcTemplate.update(
-                "UPDATE multi_sensor_last_settings SET user_in_home = ?, state = ?, temperature = ?, humidity = ?, motion = ?, smoke = ?, water = ?, record_timestamp = ?, group_id = ?, device_id = ?, home_id = ?, gateway_id = ? WHERE device_id = ? AND home_id = ? AND gateway_id = ?",
+                "UPDATE multi_sensor_last_settings SET user_in_home = ?, state = ?, temperature = ?, temperature_unit = ?, humidity = ?, humidity_unit = ?, motion = ?, smoke = ?, water = ?, record_timestamp = ?, group_id = ?, device_id = ?, home_id = ?, gateway_id = ? WHERE device_id = ? AND home_id = ? AND gateway_id = ?",
                 multiSensorEntity.isUserInHome(),
                 multiSensorEntity.getState(),
                 multiSensorEntity.getTemperature(),
+                multiSensorEntity.getTemperatureUnit(),
                 multiSensorEntity.getHumidity(),
+                multiSensorEntity.getHumidityUnit(),
                 multiSensorEntity.getMotion(),
                 multiSensorEntity.getSmoke(),
                 multiSensorEntity.getWater(),
@@ -68,7 +74,7 @@ public class MultiSensorRepository {
                 multiSensorEntity.getHomeId(),
                 multiSensorEntity.getGatewayId());
     }
-    
+
     public Optional<MultiSensorLastSettingsEntity> findMultiSensorSettingsByHomeIdGatewayIdDeviceId(String homeId,
                                                                                                     String gatewayId,
                                                                                                     String deviceId) {
@@ -81,7 +87,9 @@ public class MultiSensorRepository {
                                         rs.getBoolean("user_in_home"),
                                         rs.getString("state"),
                                         rs.getBigDecimal("temperature"),
+                                        rs.getString("temperature_unit"),
                                         rs.getBigDecimal("humidity"),
+                                        rs.getString("humidity_unit"),
                                         rs.getString("motion"),
                                         rs.getString("smoke"),
                                         rs.getString("water"),

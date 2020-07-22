@@ -9,7 +9,9 @@ public class MultiSensorEntity {
     private boolean userInHome;
     private String state;
     private BigDecimal temperature;
+    private String temperatureUnit;
     private BigDecimal humidity;
+    private String humidityUnit;
     private String motion;
     private String smoke;
     private String water;
@@ -22,12 +24,14 @@ public class MultiSensorEntity {
     public MultiSensorEntity() {
     }
 
-    public MultiSensorEntity(Long id, boolean userInHome, String state, BigDecimal temperature, BigDecimal humidity, String motion, String smoke, String water, Timestamp recordTimestamp, String groupId, String deviceId, String homeId, String gatewayId) {
+    public MultiSensorEntity(Long id, boolean userInHome, String state, BigDecimal temperature, String temperatureUnit, BigDecimal humidity, String humidityUnit, String motion, String smoke, String water, Timestamp recordTimestamp, String groupId, String deviceId, String homeId, String gatewayId) {
         this.id = id;
         this.userInHome = userInHome;
         this.state = state;
         this.temperature = temperature;
+        this.temperatureUnit = temperatureUnit;
         this.humidity = humidity;
+        this.humidityUnit = humidityUnit;
         this.motion = motion;
         this.smoke = smoke;
         this.water = water;
@@ -140,5 +144,21 @@ public class MultiSensorEntity {
 
     public void setGatewayId(String gatewayId) {
         this.gatewayId = gatewayId;
+    }
+
+    public String getTemperatureUnit() {
+        return temperatureUnit;
+    }
+
+    public void setTemperatureUnit(String temperatureUnit) {
+        this.temperatureUnit = temperatureUnit;
+    }
+
+    public String getHumidityUnit() {
+        return humidityUnit;
+    }
+
+    public void setHumidityUnit(String humidityUnit) {
+        this.humidityUnit = humidityUnit;
     }
 }

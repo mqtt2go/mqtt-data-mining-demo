@@ -5,15 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vutbr.feec.utko.demo.entities.MultiSensorEntity;
 import com.vutbr.feec.utko.demo.entities.MultiSensorLastSettingsEntity;
 import com.vutbr.feec.utko.demo.repository.MultiSensorRepository;
-import com.vutbr.feec.utko.demo.utils.AbstractSensorsFields;
-import com.vutbr.feec.utko.demo.utils.ReportValueAndUnit;
-import com.vutbr.feec.utko.demo.utils.SensorsReport;
-import com.vutbr.feec.utko.demo.utils.SensorsReportValueAndUnit;
+import com.vutbr.feec.utko.demo.utils.*;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Optional;
 
@@ -35,20 +31,21 @@ public class MultiSensorService {
     public void storeMultiSensorData(String[] sensorIds, MqttMessage mqttMessage) throws JsonProcessingException {
         MultiSensorEntity multiSensor = new MultiSensorEntity();
         String reportType = sensorIds[3];
-        Optional<MultiSensorLastSettingsEntity> multiSensorLastSettingsOpt = multiSensorRepository.findMultiSensorSettingsByHomeIdGatewayIdDeviceId(sensorIds[0], sensorIds[1], sensorIds[2]);
-        if (multiSensorLastSettingsOpt.isPresent()) {
+        try {
+            Optional<MultiSensorLastSettingsEntity> multiSensorLastSettingsOpt = multiSensorRepository.findMultiSensorSettingsByHomeIdGatewayIdDeviceId(sensorIds[0], sensorIds[1], sensorIds[2]);
             MultiSensorLastSettingsEntity multiSensorLastSettings = multiSensorLastSettingsOpt.get();
             modelMapper.map(multiSensorLastSettings, multiSensor);
             setMultiSensorValue(reportType, mqttMessage, multiSensor, multiSensorLastSettings);
             // update last settings record
             addBasicMultiSensorLastSettingsFields(multiSensorLastSettings, sensorIds);
             multiSensorRepository.updateMultiSensorLastSettings(multiSensorLastSettings);
-        } else {
+        } catch (org.springframework.dao.EmptyResultDataAccessException ex) {
             MultiSensorLastSettingsEntity multiSensorLastSettings = new MultiSensorLastSettingsEntity();
             setMultiSensorValue(reportType, mqttMessage, multiSensor, multiSensorLastSettings);
             // create new record
             addBasicMultiSensorLastSettingsFields(multiSensorLastSettings, sensorIds);
             multiSensorRepository.saveMultiSensorLastSettings(multiSensorLastSettings);
+
         }
         addBasicMultiSensorFields(multiSensor, sensorIds);
         multiSensorRepository.saveMultiSensor(multiSensor);
@@ -60,13 +57,13 @@ public class MultiSensorService {
             multiSensor.setState(reportValueAndUnit);
             multiSensorLastSettings.setState(reportValueAndUnit);
         } else if (reportType.equals(AbstractSensorsFields.TEMPERATURE)) {
-            ReportValueAndUnit reportValueAndUnit = this.getReportValueAndUnit(mqttMessage).getReport();
-            multiSensor.setTemperature(BigDecimal.valueOf(Long.parseLong(reportValueAndUnit.getValue())));
-            multiSensorLastSettings.setTemperature(BigDecimal.valueOf(Long.parseLong(reportValueAndUnit.getValue())));
+            ReportValueAndUnitDecimal reportValueAndUnit = this.getReportValueAndUnit(mqttMessage).getReport();
+            multiSensor.setTemperature(reportValueAndUnit.getValue());
+            multiSensorLastSettings.setTemperature(reportValueAndUnit.getValue());
         } else if (reportType.equals(AbstractSensorsFields.HUMIDITY)) {
-            ReportValueAndUnit reportValueAndUnit = this.getReportValueAndUnit(mqttMessage).getReport();
-            multiSensor.setHumidity(BigDecimal.valueOf(Long.parseLong(reportValueAndUnit.getValue())));
-            multiSensorLastSettings.setHumidity(BigDecimal.valueOf(Long.parseLong(reportValueAndUnit.getValue())));
+            ReportValueAndUnitDecimal reportValueAndUnit = this.getReportValueAndUnit(mqttMessage).getReport();
+            multiSensor.setHumidity(reportValueAndUnit.getValue());
+            multiSensorLastSettings.setHumidity(reportValueAndUnit.getValue());
         } else if (reportType.equals(AbstractSensorsFields.MOTION)) {
             String reportValueAndUnit = this.getReport(mqttMessage).getReport();
             multiSensor.setMotion(reportValueAndUnit);
@@ -96,8 +93,8 @@ public class MultiSensorService {
         multiSensorLastSettings.setDeviceId(sensorIds[2]);
     }
 
-    public SensorsReportValueAndUnit getReportValueAndUnit(MqttMessage mqttMessage) throws JsonProcessingException {
-        return objectMapper.readValue(new String(mqttMessage.getPayload()), SensorsReportValueAndUnit.class);
+    public SensorsReportValueAndUnitBigDecimal getReportValueAndUnit(MqttMessage mqttMessage) throws JsonProcessingException {
+        return objectMapper.readValue(new String(mqttMessage.getPayload()), SensorsReportValueAndUnitBigDecimal.class);
     }
 
     public SensorsReport getReport(MqttMessage mqttMessage) throws JsonProcessingException {

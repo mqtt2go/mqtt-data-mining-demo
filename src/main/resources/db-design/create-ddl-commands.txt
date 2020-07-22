@@ -66,8 +66,7 @@ CREATE TABLE IF NOT EXISTS `mqtt2godemo`.`camera` (
   `device_id` VARCHAR(45) NOT NULL,
   `home_id` VARCHAR(45) NOT NULL,
   `gateway_id` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
+  PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
 
@@ -83,8 +82,7 @@ CREATE TABLE IF NOT EXISTS `mqtt2godemo`.`light` (
   `device_id` VARCHAR(45) NOT NULL,
   `home_id` VARCHAR(45) NOT NULL,
   `gateway_id` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
+  PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
 
@@ -100,8 +98,7 @@ CREATE TABLE IF NOT EXISTS `mqtt2godemo`.`light_last_settings` (
   `device_id` VARCHAR(45) NOT NULL,
   `home_id` VARCHAR(45) NOT NULL,
   `gateway_id` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
+  PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
 
@@ -122,8 +119,7 @@ CREATE TABLE IF NOT EXISTS `mqtt2godemo`.`multi_sensor` (
   `device_id` VARCHAR(45) NOT NULL,
   `home_id` VARCHAR(45) NOT NULL,
   `gateway_id` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
+  PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
 
@@ -144,8 +140,7 @@ CREATE TABLE IF NOT EXISTS `mqtt2godemo`.`multi_sensor_last_settings` (
   `device_id` VARCHAR(45) NOT NULL,
   `home_id` VARCHAR(45) NOT NULL,
   `gateway_id` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
+  PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
 

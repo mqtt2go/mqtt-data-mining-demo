@@ -31,15 +31,15 @@ public class LightService {
     public void storeLightData(String[] sensorIds, MqttMessage mqttMessage) throws JsonProcessingException {
         LightEntity lightEntity = new LightEntity();
         String reportType = sensorIds[3];
-        Optional<LightLastSettingsEntity> lightLastSettingsOpt = lightRepository.findLightSettingsByHomeIdGatewayIdDeviceId(sensorIds[0], sensorIds[1], sensorIds[2]);
-        if (lightLastSettingsOpt.isPresent()) {
+        try {
+            Optional<LightLastSettingsEntity> lightLastSettingsOpt = lightRepository.findLightSettingsByHomeIdGatewayIdDeviceId(sensorIds[0], sensorIds[1], sensorIds[2]);
             LightLastSettingsEntity lightLastSettings = lightLastSettingsOpt.get();
             modelMapper.map(lightLastSettings, lightEntity);
             setLightValue(reportType, mqttMessage, lightEntity, lightLastSettings);
             // update last settings record
             addBasicLightLastSettingsFields(lightLastSettings, sensorIds);
             lightRepository.updateLightLastSettings(lightLastSettings);
-        } else {
+        } catch (org.springframework.dao.EmptyResultDataAccessException ex) {
             LightLastSettingsEntity lightLastSettingsEntity = new LightLastSettingsEntity();
             setLightValue(reportType, mqttMessage, lightEntity, lightLastSettingsEntity);
             // create new record
@@ -50,7 +50,8 @@ public class LightService {
         lightRepository.saveLight(lightEntity);
     }
 
-    private void setLightValue(String reportType, MqttMessage mqttMessage, LightEntity lightEntity, LightLastSettingsEntity lightLastSettings) throws JsonProcessingException {
+    private void setLightValue(String reportType, MqttMessage mqttMessage, LightEntity
+            lightEntity, LightLastSettingsEntity lightLastSettings) throws JsonProcessingException {
         if (reportType.equals(AbstractSensorsFields.STATE)) {
             String reportValueAndUnit = this.getReport(mqttMessage).getReport();
             lightEntity.setState(reportValueAndUnit);
@@ -70,10 +71,6 @@ public class LightService {
         switchLastSettings.setHomeId(sensorIds[0]);
         switchLastSettings.setGatewayId(sensorIds[1]);
         switchLastSettings.setDeviceId(sensorIds[2]);
-    }
-
-    private SensorsReportValueAndUnit getReportValueAndUnit(MqttMessage mqttMessage) throws JsonProcessingException {
-        return objectMapper.readValue(new String(mqttMessage.getPayload()), SensorsReportValueAndUnit.class);
     }
 
     private SensorsReport getReport(MqttMessage mqttMessage) throws JsonProcessingException {

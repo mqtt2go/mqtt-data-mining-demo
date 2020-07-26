@@ -22,8 +22,8 @@ public class HikariDataSourceJdbcTemplate {
 
     static {
         config.setJdbcUrl("jdbc:mysql://localhost:3306/mqtt2godemo");
-        config.setUsername("root");
-        config.setPassword("");
+        config.setUsername("debian-sys-maint");
+        config.setPassword("UOD9Ki9GsPPBehaE");
         ds = new HikariDataSource(config);
     }
 

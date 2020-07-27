@@ -27,6 +27,7 @@ public class MQTTSubscriberService {
 
     // key - device_id, value - device_type
     private static Map<String, String> DEVICE_ID_TYPE_MAPPING_MAP = new ConcurrentHashMap<>();
+    private static boolean LIGHT_STATE = false;
 
     public MQTTSubscriberService(MQTTPublisherService mqttPublisherService,
                                  LightService lightService,
@@ -51,10 +52,14 @@ public class MQTTSubscriberService {
                     LOG.info("Subscribint topic: " + topic);
                     LOG.info("Actual topic: " + actualTopicValue);
                     String payload = new String(mqttMessage.getPayload());
-                    LOG.info("MQTT message payload: " + payload);
+                    LOG.info("MQTT message payload: " + System.lineSeparator() + payload);
 
                     // <home_id>/<gateway_id>/<dev_id>/<entity>/<msg_direction>
                     String[] sensorIds = actualTopicValue.split("/");
+
+                    if (!actualTopicValue.contains("BRQ/BUT")) {
+                        return;
+                    }
 
                     if (payload.contains("query_all") && payload.contains("report_name")) {
                         refreshMapForDeviceIDTypeMapping(mqttMessage);
@@ -64,9 +69,9 @@ public class MQTTSubscriberService {
 //                    if (sensorIds[4] != null && sensorIds[4].equals("in")) {
 //                        return;
 //                    }
-                    
+
                     String deviceType = DEVICE_ID_TYPE_MAPPING_MAP.get(sensorIds[2]);
-                    if (deviceType == null || deviceType.equals("")) {
+                    if ((deviceType == null || deviceType.equals("")) && !sensorIds[3].equals("motion_detected")) {
                         return;
                     }
 
@@ -89,12 +94,14 @@ public class MQTTSubscriberService {
                         if (lightDemoId.equals(deviceIdToCheck)) {
                             LightFromBrokerDto lightDto = objectMapper.readValue(payload, LightFromBrokerDto.class);
                             if (lightDto.getValue().equals(SensorsState.ON)) {
+                                LIGHT_STATE = true;
                                 MqttMessage mqttMessagePayloadToPublish = new MqttMessage();
 
                                 MqttAnomalyMessageLight mqttAnomalyMessageLight = new MqttAnomalyMessageLight();
                                 MqttAnomalyMessageLightValue mqttAnomalyMessageLightValue = new MqttAnomalyMessageLightValue();
-                                mqttAnomalyMessageLightValue.setEventName("ANOMALY");
+                                mqttAnomalyMessageLightValue.setEventName("lights_alert");
                                 mqttAnomalyMessageLightValue.setMessage("It is not common that the light with id : " + lightDemoId + " is on in that time");
+                                mqttAnomalyMessageLightValue.setStatus("alert");
                                 mqttAnomalyMessageLight.setTimestamp(System.currentTimeMillis());
                                 mqttAnomalyMessageLight.setValue(mqttAnomalyMessageLightValue);
 
@@ -106,6 +113,25 @@ public class MQTTSubscriberService {
                                 sb.append("/");
                                 sb.append("events");
                                 mqttPublisherService.sendMessage(sb.toString(), mqttMessagePayloadToPublish);
+                            } else if (lightDto.getValue().equals(SensorsState.OFF) && LIGHT_STATE == true) {
+                                LIGHT_STATE = false;
+                                MqttMessage mqttMessagePayloadToPublish = new MqttMessage();
+
+                                MqttAnomalyMessageLight mqttAnomalyMessageLight = new MqttAnomalyMessageLight();
+                                MqttAnomalyMessageLightValue mqttAnomalyMessageLightValue = new MqttAnomalyMessageLightValue();
+                                mqttAnomalyMessageLightValue.setEventName("lights_alert");
+                                mqttAnomalyMessageLightValue.setMessage("The light with id: " + lightDemoId + " is working back as usual.");
+                                mqttAnomalyMessageLightValue.setStatus("ok");
+                                mqttAnomalyMessageLight.setTimestamp(System.currentTimeMillis());
+                                mqttAnomalyMessageLight.setValue(mqttAnomalyMessageLightValue);
+
+                                mqttMessagePayloadToPublish.setPayload(objectMapper.writeValueAsString(mqttAnomalyMessageLight).getBytes());
+                                StringBuilder sb = new StringBuilder();
+                                sb.append(sensorIds[0]); //<home_id>
+                                sb.append("/");
+                                sb.append(sensorIds[1]); //<gateway_id>
+                                sb.append("/");
+                                sb.append("events");
                             }
                         }
                     }

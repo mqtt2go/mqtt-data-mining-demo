@@ -41,9 +41,10 @@ public class App {
 
             MQTTPublisherService mqttPublisherService = new MQTTPublisherService();
             MQTTSubscriberService mqttSubscriberService = new MQTTSubscriberService(mqttPublisherService, lightService, socketService, cameraService, multiSensorService, objectMapper);
-            if (args != null && args.length > 0 && !args[0].isBlank()) {
-                mqttSubscriberService.subscribeMqttMessages(args[0]);
-            }
+//            if (args != null && args.length > 0 && !args[0].isBlank()) {
+//                mqttSubscriberService.subscribeMqttMessages(args[0]);
+//            }
+            mqttSubscriberService.subscribeMqttMessages("sb1");
             mqttSubscriberService.publishRequestForGetAllDevicesTypes();
         } catch (SQLException e) {
             LOG.error(e.getMessage());

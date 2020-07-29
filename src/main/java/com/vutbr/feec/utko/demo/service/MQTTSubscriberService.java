@@ -65,25 +65,28 @@ public class MQTTSubscriberService {
                         refreshMapForDeviceIDTypeMapping(mqttMessage);
                         return;
                     }
-//                    // if the communication is going in than it is not essential
-//                    if (sensorIds[4] != null && sensorIds[4].equals("in")) {
-//                        return;
-//                    }
 
                     String deviceType = DEVICE_ID_TYPE_MAPPING_MAP.get(sensorIds[2]);
                     if ((deviceType == null || deviceType.equals("")) && !sensorIds[3].equals(AbstractSensorsFields.MOTION_DETECTION)) {
                         return;
                     }
 
-                    if (deviceType.equals("socket")) {
-                        socketService.storeSocketData(sensorIds, mqttMessage);
-                    } else if (deviceType.equals("light")) {
-                        lightService.storeLightData(sensorIds, mqttMessage);
-                    } else if (deviceType.equals("multi_sensor")) {
-                        System.out.println("Store multisensor data..");
-                        multiSensorService.storeMultiSensorData(sensorIds, mqttMessage);
-                    } else if (deviceType.equals("camera")) {
-                        cameraService.storeCameraData(sensorIds, mqttMessage);
+                    // if the communication is going in than it is not essential
+                    if (sensorIds[4] != null && sensorIds[4].equals("in")) {
+                        return;
+                    }
+
+                    if (deviceType != null) {
+                        if (deviceType.equals("socket")) {
+                            socketService.storeSocketData(sensorIds, mqttMessage);
+                        } else if (deviceType.equals("light")) {
+                            lightService.storeLightData(sensorIds, mqttMessage);
+                        } else if (deviceType.equals("multi_sensor")) {
+                            System.out.println("Store multisensor data..");
+                            multiSensorService.storeMultiSensorData(sensorIds, mqttMessage);
+                        } else if (deviceType.equals("camera")) {
+                            cameraService.storeCameraData(sensorIds, mqttMessage);
+                        }
                     }
 
                     // <home_id>/<gateway_id>/<dev_id>/<entity>/<msg_direction>
@@ -145,6 +148,7 @@ public class MQTTSubscriberService {
     public void publishRequestForGetAllDevicesTypes() throws JsonProcessingException {
         QueryAllComands queryAllComands = new QueryAllComands();
         mqttPublisherService.sendMessage(IMqttClientInstance.MQTT_DATA_MINING_APP_TOPIC, new MqttMessage(objectMapper.writeValueAsString(queryAllComands).getBytes()));
+        System.out.println("Published a message: " + objectMapper.writeValueAsString(queryAllComands));
     }
 
     private void refreshMapForDeviceIDTypeMapping(MqttMessage mqttMessage) throws JsonProcessingException {

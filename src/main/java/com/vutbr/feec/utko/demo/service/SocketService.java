@@ -28,6 +28,7 @@ public class SocketService {
 
     public void storeSocketData(String[] sensorIds, MqttMessage mqttMessage) throws JsonProcessingException {
         SocketEntity socket = new SocketEntity();
+        socket.setUserInHome(true);
         String reportType = sensorIds[3];
         try {
             Optional<SocketLastSettingsEntity> socketLastSettingsOpt = socketRepository.findSocketSettingsByHomeIdGatewayIdDeviceId(sensorIds[0], sensorIds[1], sensorIds[2]);

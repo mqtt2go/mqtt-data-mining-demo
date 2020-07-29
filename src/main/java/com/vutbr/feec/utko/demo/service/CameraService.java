@@ -5,8 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vutbr.feec.utko.demo.entities.CameraEntity;
 import com.vutbr.feec.utko.demo.repository.CameraRepository;
 import com.vutbr.feec.utko.demo.utils.AbstractSensorsFields;
-import com.vutbr.feec.utko.demo.utils.SensorsReport;
-import com.vutbr.feec.utko.demo.utils.SensorsReportValueAndUnit;
+import com.vutbr.feec.utko.demo.utils.SensorsReportValue;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.modelmapper.ModelMapper;
 
@@ -28,6 +27,7 @@ public class CameraService {
 
     public void storeCameraData(String[] sensorIds, MqttMessage mqttMessage) throws JsonProcessingException {
         CameraEntity cameraEntity = new CameraEntity();
+        cameraEntity.setUserInHome(true);
         String reportType = sensorIds[3];
         setCameraValue(reportType, mqttMessage, cameraEntity);
         // create new record
@@ -36,9 +36,9 @@ public class CameraService {
     }
 
     private void setCameraValue(String reportType, MqttMessage mqttMessage, CameraEntity cameraEntity) throws JsonProcessingException {
-        if (reportType.equals(AbstractSensorsFields.STATE)) {
-            String reportValueAndUnit = this.getReport(mqttMessage).getReport();
-            cameraEntity.setState(reportValueAndUnit);
+        if (reportType.equals(AbstractSensorsFields.MOTION_DETECTION)) {
+            String reportValue = this.getReport(mqttMessage).getReport().getValue();
+            cameraEntity.setState(reportValue);
         }
     }
 
@@ -49,8 +49,8 @@ public class CameraService {
         cameraEntity.setDeviceId(sensorsIds[2]);
     }
 
-    private SensorsReport getReport(MqttMessage mqttMessage) throws JsonProcessingException {
-        return objectMapper.readValue(new String(mqttMessage.getPayload()), SensorsReport.class);
+    private SensorsReportValue getReport(MqttMessage mqttMessage) throws JsonProcessingException {
+        return objectMapper.readValue(new String(mqttMessage.getPayload()), SensorsReportValue.class);
     }
 
 }

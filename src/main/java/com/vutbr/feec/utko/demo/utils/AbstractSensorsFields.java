@@ -3,6 +3,8 @@ package com.vutbr.feec.utko.demo.utils;
 public abstract class AbstractSensorsFields {
 
     public static final String STATE = "state";
+    public static final String MOTION_DETECTION = "motion_detection";
+    public static final String SWITCH = "switch";
     public static final String TEMPERATURE = "temperature";
 
     // socket

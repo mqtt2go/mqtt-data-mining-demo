@@ -71,7 +71,7 @@ public class MQTTSubscriberService {
 //                    }
 
                     String deviceType = DEVICE_ID_TYPE_MAPPING_MAP.get(sensorIds[2]);
-                    if ((deviceType == null || deviceType.equals("")) && !sensorIds[3].equals("motion_detected")) {
+                    if ((deviceType == null || deviceType.equals("")) && !sensorIds[3].equals(AbstractSensorsFields.MOTION_DETECTION)) {
                         return;
                     }
 
@@ -82,9 +82,7 @@ public class MQTTSubscriberService {
                     } else if (deviceType.equals("multi_sensor")) {
                         System.out.println("Store multisensor data..");
                         multiSensorService.storeMultiSensorData(sensorIds, mqttMessage);
-                    }
-
-                    if (sensorIds != null && sensorIds.length > 3 && sensorIds[3].equals("motion_detected")) {
+                    } else if (deviceType.equals("camera")) {
                         cameraService.storeCameraData(sensorIds, mqttMessage);
                     }
 

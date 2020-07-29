@@ -30,6 +30,7 @@ public class MultiSensorService {
 
     public void storeMultiSensorData(String[] sensorIds, MqttMessage mqttMessage) throws JsonProcessingException {
         MultiSensorEntity multiSensor = new MultiSensorEntity();
+        multiSensor.setUserInHome(true);
         String reportType = sensorIds[3];
         try {
             Optional<MultiSensorLastSettingsEntity> multiSensorLastSettingsOpt = multiSensorRepository.findMultiSensorSettingsByHomeIdGatewayIdDeviceId(sensorIds[0], sensorIds[1], sensorIds[2]);

@@ -6,6 +6,7 @@ import com.vutbr.feec.utko.demo.entities.LightEntity;
 import com.vutbr.feec.utko.demo.entities.LightLastSettingsEntity;
 import com.vutbr.feec.utko.demo.repository.LightRepository;
 import com.vutbr.feec.utko.demo.utils.AbstractSensorsFields;
+import com.vutbr.feec.utko.demo.utils.LightReportValue;
 import com.vutbr.feec.utko.demo.utils.SensorsReport;
 import com.vutbr.feec.utko.demo.utils.SensorsReportValueAndUnit;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
@@ -30,6 +31,7 @@ public class LightService {
 
     public void storeLightData(String[] sensorIds, MqttMessage mqttMessage) throws JsonProcessingException {
         LightEntity lightEntity = new LightEntity();
+        lightEntity.setUserInHome(true);
         String reportType = sensorIds[3];
         try {
             Optional<LightLastSettingsEntity> lightLastSettingsOpt = lightRepository.findLightSettingsByHomeIdGatewayIdDeviceId(sensorIds[0], sensorIds[1], sensorIds[2]);
@@ -50,10 +52,9 @@ public class LightService {
         lightRepository.saveLight(lightEntity);
     }
 
-    private void setLightValue(String reportType, MqttMessage mqttMessage, LightEntity
-            lightEntity, LightLastSettingsEntity lightLastSettings) throws JsonProcessingException {
-        if (reportType.equals(AbstractSensorsFields.STATE)) {
-            String reportValueAndUnit = this.getReport(mqttMessage).getReport();
+    private void setLightValue(String reportType, MqttMessage mqttMessage, LightEntity lightEntity, LightLastSettingsEntity lightLastSettings) throws JsonProcessingException {
+        if (reportType.equals(AbstractSensorsFields.SWITCH)) {
+            String reportValueAndUnit = this.getReport(mqttMessage).getValue();
             lightEntity.setState(reportValueAndUnit);
             lightLastSettings.setState(reportValueAndUnit);
         }
@@ -73,8 +74,8 @@ public class LightService {
         switchLastSettings.setDeviceId(sensorIds[2]);
     }
 
-    private SensorsReport getReport(MqttMessage mqttMessage) throws JsonProcessingException {
-        return objectMapper.readValue(new String(mqttMessage.getPayload()), SensorsReport.class);
+    private LightReportValue getReport(MqttMessage mqttMessage) throws JsonProcessingException {
+        return objectMapper.readValue(new String(mqttMessage.getPayload()), LightReportValue.class);
     }
 
 }

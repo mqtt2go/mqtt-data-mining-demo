@@ -26,7 +26,7 @@ public class LightRepository {
                 lightEntity.getHomeId(),
                 lightEntity.getGatewayId());
     }
-
+    
     public void saveLightLastSettings(LightLastSettingsEntity lightLastSettingsEntity) {
         jdbcTemplate.update(
                 "INSERT INTO light_last_settings (user_in_home, state, record_timestamp, group_id, device_id, home_id, gateway_id) VALUES (?, ?, ?, ?, ?, ?, ?)",
@@ -77,21 +77,32 @@ public class LightRepository {
     /**
      * <pre>
      * <code>
-     * SELECT COUNT(*) FROM light_demo WHERE light_demo.timestamp_record > DATE_SUB(NOW(),INTERVAL 3 HOUR) AND (state IS NOT NULL AND state <> '')
+     * SELECT COUNT(*) FROM light WHERE light.record_timestamp > DATE_SUB(NOW(),INTERVAL 15 second) AND (state IS NOT NULL AND state <> '' AND state LIKE 'on') AND device_id = 'sb1'
      * </code>
      * </pre>
      *
-     * @param lightDemoId
      * @return
      */
-    public boolean findActionInTheLastHour(String lightDemoId, Integer numberOfOnStatesRecords) {
+    public boolean findSb1OnAnomaly() {
         Integer foundRecords = jdbcTemplate.queryForObject(
-                "SELECT COUNT(*) FROM light WHERE light.timestamp_record > DATE_SUB(NOW(),INTERVAL 1 HOUR) AND (state IS NOT NULL AND state <> '')",
+                "SELECT COUNT(*) FROM light WHERE light.record_timestamp > DATE_SUB(NOW(),INTERVAL 15 second) AND (state IS NOT NULL AND state <> '' AND state LIKE 'on') AND device_id = 'sb1'",
                 Integer.class);
-        if (foundRecords > numberOfOnStatesRecords) {
+        if (foundRecords > 0) {
             return true;
         } else {
             return false;
         }
     }
+
+    public boolean findSb1OffAnomaly() {
+        Integer foundRecords = jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM light WHERE light.record_timestamp > DATE_SUB(NOW(),INTERVAL 15 second) AND (state IS NOT NULL AND state <> '' AND state LIKE 'off') AND device_id = 'sb1'",
+                Integer.class);
+        if (foundRecords > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }

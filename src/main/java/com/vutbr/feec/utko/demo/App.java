@@ -46,6 +46,9 @@ public class App {
 //            }
             mqttSubscriberService.subscribeMqttMessages("sb1");
             mqttSubscriberService.publishRequestForGetAllDevicesTypes();
+
+            AnomalyChecker anomalyChecker = new AnomalyChecker(mqttPublisherService, lightRepository, objectMapper);
+            anomalyChecker.checkLightAnomaly();
         } catch (SQLException e) {
             LOG.error(e.getMessage());
         } catch (JsonProcessingException e) {

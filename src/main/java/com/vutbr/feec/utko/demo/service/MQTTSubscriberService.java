@@ -88,54 +88,6 @@ public class MQTTSubscriberService {
                             cameraService.storeCameraData(sensorIds, mqttMessage);
                         }
                     }
-
-                    // <home_id>/<gateway_id>/<dev_id>/<entity>/<msg_direction>
-                    if (sensorIds != null && sensorIds.length > 2) {
-                        String lightDemoId = sensorIds[2];
-                        if (lightDemoId.equals(deviceIdToCheck)) {
-                            LightFromBrokerDto lightDto = objectMapper.readValue(payload, LightFromBrokerDto.class);
-                            if (lightDto.getValue().equals(SensorsState.ON)) {
-                                LIGHT_STATE = true;
-                                MqttMessage mqttMessagePayloadToPublish = new MqttMessage();
-
-                                MqttAnomalyMessageLight mqttAnomalyMessageLight = new MqttAnomalyMessageLight();
-                                MqttAnomalyMessageLightValue mqttAnomalyMessageLightValue = new MqttAnomalyMessageLightValue();
-                                mqttAnomalyMessageLightValue.setEventName("lights_alert");
-                                mqttAnomalyMessageLightValue.setMessage("It is not common that the light with id : " + lightDemoId + " is on in that time");
-                                mqttAnomalyMessageLightValue.setStatus("alert");
-                                mqttAnomalyMessageLight.setTimestamp(System.currentTimeMillis());
-                                mqttAnomalyMessageLight.setValue(mqttAnomalyMessageLightValue);
-
-                                mqttMessagePayloadToPublish.setPayload(objectMapper.writeValueAsString(mqttAnomalyMessageLight).getBytes());
-                                StringBuilder sb = new StringBuilder();
-                                sb.append(sensorIds[0]); //<home_id>
-                                sb.append("/");
-                                sb.append(sensorIds[1]); //<gateway_id>
-                                sb.append("/");
-                                sb.append("events");
-                                mqttPublisherService.sendMessage(sb.toString(), mqttMessagePayloadToPublish);
-                            } else if (lightDto.getValue().equals(SensorsState.OFF) && LIGHT_STATE == true) {
-                                LIGHT_STATE = false;
-                                MqttMessage mqttMessagePayloadToPublish = new MqttMessage();
-
-                                MqttAnomalyMessageLight mqttAnomalyMessageLight = new MqttAnomalyMessageLight();
-                                MqttAnomalyMessageLightValue mqttAnomalyMessageLightValue = new MqttAnomalyMessageLightValue();
-                                mqttAnomalyMessageLightValue.setEventName("lights_alert");
-                                mqttAnomalyMessageLightValue.setMessage("The light with id: " + lightDemoId + " is working back as usual.");
-                                mqttAnomalyMessageLightValue.setStatus("ok");
-                                mqttAnomalyMessageLight.setTimestamp(System.currentTimeMillis());
-                                mqttAnomalyMessageLight.setValue(mqttAnomalyMessageLightValue);
-
-                                mqttMessagePayloadToPublish.setPayload(objectMapper.writeValueAsString(mqttAnomalyMessageLight).getBytes());
-                                StringBuilder sb = new StringBuilder();
-                                sb.append(sensorIds[0]); //<home_id>
-                                sb.append("/");
-                                sb.append(sensorIds[1]); //<gateway_id>
-                                sb.append("/");
-                                sb.append("events");
-                            }
-                        }
-                    }
                 } catch (Exception e) {
                     LOG.error("MQTTSubscriberService subscribeMessage()", e);
                 }

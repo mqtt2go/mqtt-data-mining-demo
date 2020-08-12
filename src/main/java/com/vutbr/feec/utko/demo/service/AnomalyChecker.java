@@ -32,7 +32,7 @@ public class AnomalyChecker {
         ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
         scheduledExecutorService.scheduleAtFixedRate(() -> {
                     if (lightRepository.findSb1OnAnomaly()) {
-                        String message = "Your TV ambient lights are unexpectedly ON. Please check it what is the source of such event.";
+                        String message = "Your TV ambient lights are unexpectedly ON. Please check what is the source of such event.";
                         this.invokeAnomalyLight("lights_alert", "alert", message);
                     }
                 },

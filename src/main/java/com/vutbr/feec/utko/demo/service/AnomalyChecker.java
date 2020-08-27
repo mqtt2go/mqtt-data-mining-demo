@@ -2,14 +2,11 @@ package com.vutbr.feec.utko.demo.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vutbr.feec.utko.demo.dto.LightFromBrokerDto;
 import com.vutbr.feec.utko.demo.repository.LightRepository;
 import com.vutbr.feec.utko.demo.utils.MqttAnomalyMessageLight;
 import com.vutbr.feec.utko.demo.utils.MqttAnomalyMessageLightValue;
-import com.vutbr.feec.utko.demo.utils.SensorsState;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -47,8 +44,8 @@ public class AnomalyChecker {
                     }
                 },
                 0,
-                1,
-                TimeUnit.MINUTES);
+                30,
+                TimeUnit.SECONDS);
     }
 
     private void invokeAnomalyLight(String eventName, String status, String message) {

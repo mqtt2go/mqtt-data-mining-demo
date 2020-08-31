@@ -18,7 +18,7 @@ public class IMqttClientInstance {
     public static final String MQTT_BROKER_PASSWORD = "FritzBox2";
     public static final String MQTT_DATA_MINING_APP_TOPIC = "BRQ/BUT";
     public static final String MQTT_CLIENT_ID = "mqttisthebest";
-    public static final String MQTT_BROKER_QUERY_ALL_TOPIC = "BRQ/BUT";
+    public static final String MQTT_BROKER_QUERY_ALL_TOPIC = "BRQ/BUT/in";
     public static IMqttClient instance;
 
     public static IMqttClient getInstance() {

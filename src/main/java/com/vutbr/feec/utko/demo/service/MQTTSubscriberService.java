@@ -61,6 +61,8 @@ public class MQTTSubscriberService {
                         return;
                     }
 
+                    DEVICE_ID_TYPE_MAPPING_MAP.put("sb1", "light");
+
                     if (payload.contains("query_all") && payload.contains("report_name")) {
                         refreshMapForDeviceIDTypeMapping(mqttMessage);
                         return;
@@ -99,7 +101,7 @@ public class MQTTSubscriberService {
 
     public void publishRequestForGetAllDevicesTypes() throws JsonProcessingException {
         QueryAllComands queryAllComands = new QueryAllComands();
-        mqttPublisherService.sendMessage(IMqttClientInstance.MQTT_DATA_MINING_APP_TOPIC, new MqttMessage(objectMapper.writeValueAsString(queryAllComands).getBytes()));
+        mqttPublisherService.sendMessage(IMqttClientInstance.MQTT_BROKER_QUERY_ALL_TOPIC, new MqttMessage(objectMapper.writeValueAsString(queryAllComands).getBytes()));
         System.out.println("Published a message: " + objectMapper.writeValueAsString(queryAllComands));
     }
 

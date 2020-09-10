@@ -2,6 +2,7 @@ package com.vutbr.feec.utko.demo.repository;
 
 import com.vutbr.feec.utko.demo.entities.LightEntity;
 import com.vutbr.feec.utko.demo.entities.LightLastSettingsEntity;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.Optional;
@@ -26,7 +27,7 @@ public class LightRepository {
                 lightEntity.getHomeId(),
                 lightEntity.getGatewayId());
     }
-    
+
     public void saveLightLastSettings(LightLastSettingsEntity lightLastSettingsEntity) {
         jdbcTemplate.update(
                 "INSERT INTO light_last_settings (user_in_home, state, record_timestamp, group_id, device_id, home_id, gateway_id) VALUES (?, ?, ?, ?, ?, ?, ?)",
@@ -72,6 +73,14 @@ public class LightRepository {
                                         rs.getString("gateway_id")
                                 ));
         return Optional.ofNullable(lightLastSettingsEntity);
+    }
+
+    public String findSb1Anomaly() {
+        try {
+            return jdbcTemplate.queryForObject("SELECT l.state FROM light l WHERE l.record_timestamp > DATE_SUB(NOW(),INTERVAL 2 second) AND l.state IS NOT NULL AND l.state <> '' ORDER BY l.id DESC LIMIT 1 ", String.class);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     /**

@@ -3,7 +3,6 @@ package com.vutbr.feec.utko.demo.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vutbr.feec.utko.demo.config.IMqttClientInstance;
-import com.vutbr.feec.utko.demo.dto.LightFromBrokerDto;
 import com.vutbr.feec.utko.demo.utils.*;
 import com.vutbr.feec.utko.demo.utils.mappings.*;
 import org.eclipse.paho.client.mqttv3.MqttException;

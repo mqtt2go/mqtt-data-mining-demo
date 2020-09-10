@@ -39,7 +39,7 @@ public class App {
             CameraService cameraService = new CameraService(cameraRepository, objectMapper, modelMapper);
             MultiSensorService multiSensorService = new MultiSensorService(multiSensorRepository, objectMapper, modelMapper);
 
-            MQTTPublisherService mqttPublisherService = new MQTTPublisherService();
+            MQTTPublisherService mqttPublisherService = new MQTTPublisherService(objectMapper);
             MQTTSubscriberService mqttSubscriberService = new MQTTSubscriberService(mqttPublisherService, lightService, socketService, cameraService, multiSensorService, objectMapper);
 //            if (args != null && args.length > 0 && !args[0].isBlank()) {
 //                mqttSubscriberService.subscribeMqttMessages(args[0]);

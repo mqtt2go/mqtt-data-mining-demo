@@ -24,8 +24,9 @@ public class App {
         try {
             ObjectMapperConfig objectMapperConfig = new ObjectMapperConfig();
             ObjectMapper objectMapper = objectMapperConfig.getObjectMapper();
-
             ModelMapper modelMapper = new ModelMapper();
+            // publishing MQTT messages
+            MQTTPublisherService mqttPublisherService = new MQTTPublisherService(objectMapper);
 
             JdbcTemplate jdbcTemplate = new JdbcTemplate(HikariDataSourceJdbcTemplate.getDataSource());
 
@@ -35,11 +36,10 @@ public class App {
             MultiSensorRepository multiSensorRepository = new MultiSensorRepository(jdbcTemplate);
 
             SocketService socketService = new SocketService(socketRepository, objectMapper, modelMapper);
-            LightService lightService = new LightService(lightRepository, objectMapper, modelMapper);
+            LightService lightService = new LightService(lightRepository, objectMapper, modelMapper, mqttPublisherService);
             CameraService cameraService = new CameraService(cameraRepository, objectMapper, modelMapper);
             MultiSensorService multiSensorService = new MultiSensorService(multiSensorRepository, objectMapper, modelMapper);
 
-            MQTTPublisherService mqttPublisherService = new MQTTPublisherService(objectMapper);
             MQTTSubscriberService mqttSubscriberService = new MQTTSubscriberService(mqttPublisherService, lightService, socketService, cameraService, multiSensorService, objectMapper);
 //            if (args != null && args.length > 0 && !args[0].isBlank()) {
 //                mqttSubscriberService.subscribeMqttMessages(args[0]);

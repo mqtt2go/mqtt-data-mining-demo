@@ -27,28 +27,28 @@ public class AnomalyChecker {
     }
 
     public void checkLightAnomaly() {
-        ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
-        scheduledExecutorService.scheduleAtFixedRate(() -> {
-                    String state = lightRepository.findSb1Anomaly();
-                    if (state != null && state.equals(SensorsState.ON)) {
-                        String message = "Your TV ambient lights are unexpectedly ON. Please check what is the source of such event.";
-                        mqttPublisherService.invokeAnomalyLight("lights_alert", "alert", message);
-                    }
-                },
-                0,
-                2,
-                TimeUnit.SECONDS);
-        ScheduledExecutorService scheduledExecutorServiceBackToNormal = Executors.newSingleThreadScheduledExecutor();
-        scheduledExecutorServiceBackToNormal.scheduleAtFixedRate(() -> {
-                    String state = lightRepository.findSb1Anomaly();
-                    if (state != null & state.equals(SensorsState.OFF)) {
-                        String message = "Your lights are working back as expected..";
-                        mqttPublisherService.invokeAnomalyLight("lights_alert", "ok", message);
-                    }
-                },
-                0,
-                2,
-                TimeUnit.SECONDS);
+//        ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+//        scheduledExecutorService.scheduleAtFixedRate(() -> {
+//                    String state = lightRepository.findSb1Anomaly();
+//                    if (state != null && state.equals(SensorsState.ON)) {
+//                        String message = "Your TV ambient lights are unexpectedly ON. Please check what is the source of such event.";
+//                        mqttPublisherService.invokeAnomalyLight("lights_alert", "alert", message);
+//                    }
+//                },
+//                0,
+//                2,
+//                TimeUnit.SECONDS);
+//        ScheduledExecutorService scheduledExecutorServiceBackToNormal = Executors.newSingleThreadScheduledExecutor();
+//        scheduledExecutorServiceBackToNormal.scheduleAtFixedRate(() -> {
+//                    String state = lightRepository.findSb1Anomaly();
+//                    if (state != null & state.equals(SensorsState.OFF)) {
+//                        String message = "Your lights are working back as expected..";
+//                        mqttPublisherService.invokeAnomalyLight("lights_alert", "ok", message);
+//                    }
+//                },
+//                0,
+//                2,
+//                TimeUnit.SECONDS);
     }
 
 }

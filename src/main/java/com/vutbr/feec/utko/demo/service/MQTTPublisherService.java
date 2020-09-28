@@ -42,6 +42,7 @@ public class MQTTPublisherService {
         mqttAnomalyMessageLightValue.setStatus(status);
         mqttAnomalyMessageLight.setTimestamp(System.currentTimeMillis());
         mqttAnomalyMessageLight.setValue(mqttAnomalyMessageLightValue);
+        mqttAnomalyMessageLight.setType("alert");
 
         try {
             mqttMessagePayloadToPublish.setPayload(objectMapper.writeValueAsString(mqttAnomalyMessageLight).getBytes());

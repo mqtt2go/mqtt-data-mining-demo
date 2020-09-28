@@ -4,6 +4,7 @@ public class MqttAnomalyMessageLight {
 
     private int priorityLevel;
     private long timestamp;
+    private String type;
     private MqttAnomalyMessageLightValue value;
 
     public MqttAnomalyMessageLight() {
@@ -33,11 +34,20 @@ public class MqttAnomalyMessageLight {
         this.timestamp = timestamp;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     @Override
     public String toString() {
         return "MqttAnomalyMessageLight{" +
                 "priorityLevel=" + priorityLevel +
                 ", timestamp=" + timestamp +
+                ", type='" + type + '\'' +
                 ", value=" + value +
                 '}';
     }

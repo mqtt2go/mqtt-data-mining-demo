@@ -12,13 +12,13 @@ public class IMqttClientInstance {
 
     private static Logger LOG = LoggerFactory.getLogger(IMqttClientInstance.class);
 
-    public static final String MQTT_BROKER_IP = "192.168.42.172";
-    public static final int MQTT_BROKER_PORT = 8883;
-    public static final String MQTT_BROKER_USERNAME = "mqtt2go";
-    public static final String MQTT_BROKER_PASSWORD = "FritzBox2";
-    public static final String MQTT_DATA_MINING_APP_TOPIC = "BRQ/BUT";
-    public static final String MQTT_CLIENT_ID = "mqttisthebest";
-    public static final String MQTT_BROKER_QUERY_ALL_TOPIC = "BRQ/BUT/in";
+    public static final String MQTT_BROKER_IP = "";
+    public static final int MQTT_BROKER_PORT = ;
+    public static final String MQTT_BROKER_USERNAME = "";
+    public static final String MQTT_BROKER_PASSWORD = "";
+    public static final String MQTT_DATA_MINING_APP_TOPIC = "";
+    public static final String MQTT_CLIENT_ID = "";
+    public static final String MQTT_BROKER_QUERY_ALL_TOPIC = "";
     public static IMqttClient instance;
 
     public static IMqttClient getInstance() {

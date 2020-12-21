@@ -1,5 +1,7 @@
 # MQTT Anomaly Detection Demo App
 
+![Anomaly Detection](alert.PNG)
+
 ## Available Scripts
 In the project directory, you can run:
 

@@ -14,3 +14,4 @@ Runs the app, the app connects to the `MySQL` database and to the predefined `MQ
 
 ## Application Workflow
 
+![Application Workflow](applicationWorkflow.PNG)
